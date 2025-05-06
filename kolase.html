@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Ulang Tahun Spesial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0a1a 0%, #2a0a2a 100%);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            color: #f8e0f0;
+            position: relative;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .judul {
+            width: 100%;
+            margin-top: 260px;
+            text-align: center;
+            font-size: clamp(2.5em, 5vw, 4em);
+            color:  rgba(255, 242, 298, 9);
+            text-shadow: 0 0 40px rgba(255, 102, 178, 9), 2px 2px 6px rgba(0, 0, 0, 6);
+            position: relative;
+            z-index: 10;
+            animation: glow 2s ease-in-out infinite alternate;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 0 20px;
+        }
+        
+        .asuu {
+            margin-bottom: 250px;
+        }
+        
+        .pee {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+            color:  rgba(255, 242, 298, 9);
+            text-shadow: 0 0 40px rgba(255, 102, 178, 9), 2px 2px 6px rgba(0, 0, 0, 6);
+            position: relative;
+            font-weight: 600;
+            z-index: 10;
+            animation: glow 2s ease-in-out infinite alternate;
+            letter-spacing: 1px;
+            padding: 0 20px;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 12px rgba(255, 102, 178, 0.9), 2px 2px 6px rgba(0, 0, 0, 0.6); }
+            100% { text-shadow: 0 0 20px rgba(255, 102, 178, 1), 0 0 30px rgba(255, 102, 178, 0.7), 2px 2px 8px rgba(0, 0, 0, 0.8); }
+        }
+
+        .item {
+            position: absolute;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background-color: #241224;
+            border: 2px solid rgba(255, 102, 178, 0.3);
+            opacity: 0;
+            animation: float 8s infinite ease-in-out;
+            will-change: transform;
+            cursor: pointer;
+        }
+
+        .item img, .item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .item video {
+            background-color: #000;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-1deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+
+        @keyframes gentleShake {
+            0% { transform: translate(0px, 0px) rotate(0deg) scale(1.05); }
+            25% { transform: translate(1px, -1px) rotate(0.5deg) scale(1.05); }
+            50% { transform: translate(-1px, 1px) rotate(-0.5deg) scale(1.05); }
+            75% { transform: translate(1px, 0px) rotate(0.3deg) scale(1.05); }
+            100% { transform: translate(0px, 0px) rotate(0deg) scale(1.05); }
+        }
+
+        .item:hover {
+            animation: gentleShake 1.5s infinite;
+            z-index: 20 !important;
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(255, 51, 153, 0.6);
+            border-color: rgba(255, 102, 178, 0.8);
+        }
+
+        .item:hover img {
+            transform: scale(1.05);
+        }
+
+        .loader {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(255, 102, 178, 0.2);
+            border-top: 8px solid #ff66b2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 200;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .loading-message {
+            position: fixed;
+            top: 62%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff66b2;
+            font-size: clamp(1em, 3vw, 1.4em);
+            z-index: 200;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 102, 178, 0.9);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        /* Enhanced Music Widget Styling */
+        .music-widget {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 320px;
+            background: rgba(30, 10, 30, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 51, 153, 0.4);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid rgba(255, 102, 178, 0.5);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .music-widget:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 51, 153, 0.6);
+            border-color: rgba(255, 102, 178, 0.8);
+        }
+
+        .widget-cover {
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+            position: relative;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 2px solid rgba(255, 102, 178, 0.5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .widget-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .widget-cover:hover img {
+            transform: scale(1.1);
+        }
+
+        .widget-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+            z-index: 2;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            padding: 10px;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .widget-info .widget-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #ff99cc;
+            margin-bottom: 2px;
+        }
+
+        .widget-info .widget-artist {
+            font-size: 0.9em;
+            color: #f8e0f0;
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            width: 100%;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8em;
+            color: #f8e0f0;
+            opacity: 0.7;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3399, #ff66b2);
+            width: 0;
+            transition: width 0.1s linear;
+            position: relative;
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: #ff66b2;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .progress-bar:hover .progress::after {
+            opacity: 1;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .controls button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls button:hover {
+            background: rgba(255, 102, 178, 0.2);
+            transform: scale(1.1);
+        }
+
+        .controls button:active {
+            transform: scale(0.95);
+        }
+
+        .controls button img {
+            width: 16px;
+            height: 16px;
+            filter: brightness(0) invert(90%) sepia(30%) saturate(300%) hue-rotate(300deg);
+            transition: filter 0.3s ease;
+        }
+
+        .controls button:hover img {
+            filter: brightness(1) saturate(200%) invert(60%) sepia(80%) hue-rotate(320deg);
+        }
+
+        .play-pause-btn {
+            background: rgba(255, 102, 178, 0.3) !important;
+            width: 50px;
+            height: 50px;
+            margin: 0 10px;
+        }
+
+        .play-pause-btn img {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Floating hearts animation */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff66b2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center center;
+            opacity: 0;
+            animation: float-up 10s linear infinite;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.7;
+            }
+            80% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .item {
+                animation: float-mobile 8s infinite ease-in-out;
+            }
+            
+            @keyframes float-mobile {
+                0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+                50% { transform: translateY(-10px) rotate(0.5deg); }
+            }
+            
+            .music-widget {
+                width: 95%;
+                padding: 12px;
+            }
+            
+            .widget-cover {
+                height: 80px;
+            }
+            
+            .play-pause-btn {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        /* Confetti effect */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+            z-index: 9999;
+            animation: confetti-fall 5s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particleCanvas"></canvas>
+    <div class="floating-hearts" id="floatingHearts"></div>
+    <div class="container">
+        <h1 class="judul">Happy Birthday Liaa!</h1>
+        <p class="pee">klik fotonya v_v</p>
+    </div>
+    <div class="loader"></div>
+    <div class="loading-message">Sabar yahh Liaa, web masih loading! 😄</div>
+    <h1 class="judul asuu">Happy Birthday Liaa!<br>30-07-2008</h1>
+    <div class="music-widget">
+        <div class="widget-cover">
+            <img src="https://i.scdn.co/image/ab67616d00001e02d70916ee9e40c90380ba5f07" alt="Album Cover">
+            <div class="widget-info">
+                <div class="widget-title">Saturn</div>
+                <div class="widget-artist">SZA</div>
+            </div>
+        </div>
+        <div class="progress-container">
+            <span id="currentTime">0:00</span>
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <span id="duration">0:00</span>
+        </div>
+        <div class="controls">
+            <button onclick="shuffle()"><img src="https://img.icons8.com/ios-filled/50/000000/shuffle.png" alt="Shuffle"></button>
+            <button onclick="previous()"><img src="https://img.icons8.com/ios-filled/50/000000/skip-to-start.png" alt="Previous"></button>
+            <button id="playPauseBtn" class="play-pause-btn"><img src="https://img.icons8.com/ios-filled/50/000000/play.png" alt="Play"></button>
+            <button onclick="next()"><img src="https://img.icons8.com/ios-filled/50/000000/end.png" alt="Next"></button>
+            <button onclick="repeat()"><img src="https://img.icons8.com/ios-filled/50/000000/repeat.png" alt="Repeat"></button>
+        </div>
+    </div>
+    
+
+    <script>
+        // Enhanced Particle Animation
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+        let isMobile = window.innerWidth < 768;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', () => {
+            isMobile = window.innerWidth < 768;
+            resizeCanvas();
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * -canvas.height;
+                this.size = Math.random() * (isMobile ? 2 : 3) + 1;
+                this.speedY = Math.random() * 0.3 + 0.1;
+                this.speedX = Math.random() * 0.2 - 0.1;
+                this.opacity = Math.random() * 0.3 + 0.1;
+                this.color = `rgba(${Math.floor(Math.random() * 30 + 225)}, ${Math.floor(Math.random() * 50 + 100)}, ${Math.floor(Math.random() * 100 + 150)}, ${this.opacity})`;
+                this.wobble = Math.random() * 8;
+                this.wobbleSpeed = Math.random() * 0.008 + 0.003;
+                this.phase = Math.random() * Math.PI * 2;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.phase + this.y * this.wobbleSpeed) * this.wobble;
+                this.phase += 0.01;
+                if (this.y > canvas.height + this.size) {
+                    this.y = -this.size;
+                    this.x = Math.random() * canvas.width;
+                    this.opacity = Math.random() * 0.3 + 0.1;
+                    this.color = `rgba(${Math.floor(Math.random() * 30 + 225)}, ${Math.floor(Math.random() * 50 + 100)}, ${Math.floor(Math.random() * 100 + 150)}, ${this.opacity})`;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = isMobile ? 5 : 10;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            const density = isMobile ? 8000 : 5000;
+            const numberOfParticles = Math.floor(canvas.width * canvas.height / density);
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Floating hearts animation
+        function createHearts() {
+            const heartsContainer = document.getElementById('floatingHearts');
+            const heartCount = isMobile ? 10 : 20;
+            
+            for (let i = 0; i < heartCount; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.style.left = `${Math.random() * 100}%`;
+                    heart.style.width = `${Math.random() * 20 + 10}px`;
+                    heart.style.height = heart.style.width;
+                    heart.style.animationDuration = `${Math.random() * 10 + 8}s`;
+                    heart.style.animationDelay = `${Math.random() * 5}s`;
+                    heartsContainer.appendChild(heart);
+                    
+                    // Remove heart after animation completes
+                    setTimeout(() => {
+                        heart.remove();
+                    }, parseFloat(heart.style.animationDuration) * 1000);
+                }, i * 1000);
+            }
+            
+            // Keep creating hearts
+            setTimeout(createHearts, heartCount * 1000);
+        }
+        createHearts();
+
+        // Gallery Logic
+        const container = document.querySelector('.container');
+        const mediaFiles = [
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam1.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam2.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam3.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam4.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam5.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam6.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam7.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam8.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam9.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam10.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam11.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam12.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam4.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam5.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam8.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam10.jpg',
+            'https://raw.githubusercontent.com/sitotes-dev/LiaaHbd/refs/heads/main/Gam12.jpg'
+        ];
+
+        function isVideoFile(url) {
+            return url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.ogg');
+        }
+
+        function isOverlapping(newLeft, newTop, newWidth, newHeight, items, currentIndex) {
+            const padding = isMobile ? 10 : 20;
+            
+            for (let i = 0; i < items.length; i++) {
+                if (i === currentIndex) continue;
+                const otherItem = items[i];
+                const otherLeft = parseFloat(otherItem.style.left);
+                const otherTop = parseFloat(otherItem.style.top);
+                const otherWidth = parseFloat(otherItem.style.width);
+                const otherHeight = parseFloat(otherItem.style.height);
+
+                const overlap = !(newLeft + newWidth + padding < otherLeft - padding ||
+                                 newLeft - padding > otherLeft + otherWidth + padding ||
+                                 newTop + newHeight + padding < otherTop - padding ||
+                                 newTop - padding > otherTop + otherHeight + padding);
+
+                if (overlap) return true;
+            }
+            return false;
+        }
+
+        function createMediaElement(url, index, callback) {
+            const item = document.createElement('div');
+            item.classList.add('item');
+
+            const baseWidth = isMobile ? 150 : 220;
+            const widthVariation = Math.random() * (isMobile ? 30 : 40) - (isMobile ? 15 : 20);
+            const width = baseWidth + widthVariation;
+            item.style.width = `${width}px`;
+
+            if (isVideoFile(url)) {
+                const video = document.createElement('video');
+                video.src = url;
+                video.autoplay = true;
+                video.loop = true;
+                video.muted = true;
+                video.playsInline = true;
+                item.appendChild(video);
+
+                video.addEventListener('loadedmetadata', () => {
+                    const aspectRatio = video.videoHeight / video.videoWidth;
+                    const height = width * aspectRatio;
+                    item.style.height = `${height}px`;
+                    callback(item, width, height);
+                });
+            } else {
+                const img = document.createElement('img');
+                img.src = url;
+                img.loading = "lazy";
+                item.appendChild(img);
+
+                img.onload = () => {
+                    const aspectRatio = img.naturalHeight / img.naturalWidth;
+                    const height = width * aspectRatio;
+                    item.style.height = `${height}px`;
+                    callback(item, width, height);
+                };
+                img.onerror = () => {
+                    const height = width * 1.5;
+                    item.style.height = `${height}px`;
+                    callback(item, width, height);
+                };
+            }
+
+            return item;
+        }
+
+        function setInitialPosition(item, width, height, index, items) {
+            const containerWidth = container.offsetWidth;
+            const containerHeight = Math.max(container.scrollHeight, window.innerHeight * 2);
+            let left, top;
+            let attempts = 0;
+            const maxAttempts = 100;
+
+            // Try to find a non-overlapping position
+            do {
+                left = Math.random() * (containerWidth - width) * 0.85;
+                top = 100 + index * (isMobile ? 30 : 50) + Math.random() * (isMobile ? 80 : 120);
+                attempts++;
+            } while (isOverlapping(left, top, width, height, items, -1) && attempts < maxAttempts);
+
+            // If still overlapping after max attempts, just place it
+            if (attempts >= maxAttempts) {
+                left = Math.random() * (containerWidth - width) * 0.85;
+                top = 100 + index * (isMobile ? 30 : 50) + Math.random() * (isMobile ? 80 : 120);
+            }
+
+            item.style.left = `${left}px`;
+            item.style.top = `${top}px`;
+            item.style.opacity = '1';
+            item.style.transform = `rotate(${Math.random() * 6 - 3}deg)`;
+        }
+
+        function moveItem(item, items, currentIndex) {
+            const containerWidth = container.offsetWidth;
+            const containerHeight = Math.max(container.scrollHeight, window.innerHeight * 2);
+            const width = parseFloat(item.style.width);
+            const height = parseFloat(item.style.height);
+
+            let newLeft, newTop;
+            let attempts = 0;
+            const maxAttempts = 50;
+
+            // Try to find a non-overlapping position
+            do {
+                newLeft = Math.random() * (containerWidth - width) * 0.85;
+                newTop = Math.random() * (containerHeight - height - 100) + 100;
+                attempts++;
+            } while (isOverlapping(newLeft, newTop, width, height, items, currentIndex) && attempts < maxAttempts);
+
+            // If still overlapping after max attempts, just move it slightly
+            if (attempts >= maxAttempts) {
+                newLeft = parseFloat(item.style.left) + (Math.random() * 40 - 20);
+                newTop = parseFloat(item.style.top) + (Math.random() * 40 - 20);
+                
+                // Ensure it stays within bounds
+                newLeft = Math.max(0, Math.min(containerWidth - width, newLeft));
+                newTop = Math.max(100, Math.min(containerHeight - height, newTop));
+            }
+
+            const newRotation = Math.random() * 6 - 3;
+
+            item.style.transition = 'all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            item.style.left = `${newLeft}px`;
+            item.style.top = `${newTop}px`;
+            item.style.transform = `rotate(${newRotation}deg)`;
+            item.style.zIndex = Math.random() < 0.2 ? 3 : 1;
+
+            // Reset transition after animation completes
+            setTimeout(() => {
+                item.style.transition = 'all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            }, 1500);
+        }
+
+        const items = [];
+        let loadedCount = 0;
+        const totalItems = mediaFiles.length;
+
+        mediaFiles.forEach((file, index) => {
+            const mediaElement = createMediaElement(file, index, (item, width, height) => {
+                setInitialPosition(item, width, height, index, items);
+                items.push(item);
+                loadedCount++;
+
+                if (loadedCount === totalItems) {
+                    container.style.opacity = '1';
+                    document.querySelector('.loader').style.display = 'none';
+                    document.querySelector('.loading-message').style.display = 'none';
+                    
+                    // Create confetti effect when all loaded
+                    createConfetti();
+                }
+            });
+            container.appendChild(mediaElement);
+        });
+
+        // Adjust container height after all items are loaded
+        setTimeout(() => {
+            const lastItem = document.querySelector('.item:last-child');
+            if (lastItem) {
+                const lastItemBottom = parseInt(lastItem.style.top) + parseInt(lastItem.style.height) + 200;
+                container.style.height = `${lastItemBottom}px`;
+            }
+        }, 2000);
+
+        // Move items periodically with better timing
+        setInterval(() => {
+            items.forEach((item, index) => {
+                if (Math.random() > 0.7) { // 30% chance to move each interval
+                    moveItem(item, items, index);
+                }
+            });
+        }, 3000); // Move every 3 seconds
+
+        // Create confetti effect
+        function createConfetti() {
+            const colors = ['#ff66b2', '#ff99cc', '#ffccff', '#ff3399', '#ff99ff'];
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = `${Math.random() * 10 + 5}px`;
+                    confetti.style.height = `${Math.random() * 10 + 5}px`;
+                    confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                    document.body.appendChild(confetti);
+                    
+                    // Remove confetti after animation completes
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, parseFloat(confetti.style.animationDuration) * 1000);
+                }, i * 30);
+            }
+        }
+
+        // Enhanced Music Player Logic
+        const audio = new Audio('https://github.com/sitotes-dev/LiaaHbd/raw/refs/heads/main/SZA%20-%20Saturn.mp3');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+
+        // Format time (seconds to MM:SS)
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Update progress bar and time
+        function updateProgress() {
+            const { duration, currentTime } = audio;
+            const progressPercent = (currentTime / duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+            currentTimeEl.textContent = formatTime(currentTime);
+            
+            if (duration) {
+                durationEl.textContent = formatTime(duration);
+            }
+        }
+
+        // Set progress when clicked on progress bar
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        }
+
+        // Play/pause toggle
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.querySelector('img').src = 'https://img.icons8.com/ios-filled/50/000000/pause.png';
+            } else {
+                audio.pause();
+                playPauseBtn.querySelector('img').src = 'https://img.icons8.com/ios-filled/50/000000/play.png';
+            }
+        }
+
+        // Player controls
+        function previous() {
+            audio.currentTime = Math.max(0, audio.currentTime - 10);
+        }
+
+        function next() {
+            audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+        }
+
+        function shuffle() {
+            audio.currentTime = Math.random() * audio.duration;
+        }
+
+        function repeat() {
+            audio.currentTime = 0;
+            audio.play();
+        }
+
+        // Event listeners
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('ended', () => {
+            playPauseBtn.querySelector('img').src = 'https://img.icons8.com/ios-filled/50/000000/play.png';
+        });
+        progressBar.addEventListener('click', setProgress);
+        playPauseBtn.addEventListener('click', togglePlay);
+
+        // Auto-play music (with user interaction)
+        document.addEventListener('click', function initialPlay() {
+            audio.play().catch(e => console.log('Auto-play prevented:', e));
+            document.removeEventListener('click', initialPlay);
+        }, { once: true });
+
+        // Click effect on items
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.item')) {
+                createConfetti();
+            }
+        });
+            initParticles();
+    </script>
+</body>
+</html>
